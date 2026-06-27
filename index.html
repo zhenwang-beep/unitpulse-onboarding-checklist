@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UnitPulse Onboarding Checklist</title>
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#fbf9f5; --card:#ffffff; --ink:#1c1b18; --muted:#6b6358; --line:#ece7dd;
+    --green:#1a4534; --green-2:#2f5d49; --green-3:#4f7460; --green-soft:#e9efe9;
+    --cream:#fcfaf7; --sage:#7d8a6b; --taupe:#86796b; --sand:#9a8a72; --slate:#728176;
+    --shadow:0 1px 2px rgba(28,27,24,.04), 0 10px 30px rgba(28,27,24,.06);
+    --serif:"Libre Caslon Text", Georgia, "Times New Roman", serif;
+    --sans:"Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "PingFang SC","Hiragino Sans GB","Microsoft YaHei", Arial, sans-serif;
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sans);
+    background:radial-gradient(1100px 460px at 82% -10%, #edf1ea 0%, rgba(237,241,234,0) 62%), var(--bg);
+    color:var(--ink); line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:34px 20px 84px}
+
+  /* Masthead */
+  .brand{display:flex;align-items:center;gap:11px;margin-bottom:20px}
+  .logo{width:38px;height:38px;border-radius:11px;background:#141414;display:grid;place-items:center;
+    box-shadow:0 4px 12px rgba(20,20,20,.18)}
+  .logo svg{width:22px;height:22px;color:var(--cream)}
+  .wordmark{font-family:var(--sans);font-weight:750;font-size:21px;letter-spacing:-.02em;color:var(--ink)}
+  .wm-accent{color:var(--green)}
+  .brandtag{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--green);
+    background:var(--green-soft);padding:6px 13px;border-radius:999px}
+  .brandtag .dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 0 3px rgba(26,69,52,.14)}
+  h1{font-family:var(--serif);font-weight:400;font-size:38px;line-height:1.12;
+    margin:16px 0 10px;letter-spacing:-.01em;color:var(--green)}
+  .sub{color:var(--muted);font-size:16px;max-width:700px;margin:0}
+
+  /* Toolbar */
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:24px 0 16px}
+  .seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:var(--shadow)}
+  .seg button{border:0;background:transparent;color:var(--muted);font-family:var(--sans);font-weight:650;font-size:14px;
+    padding:7px 17px;border-radius:999px;cursor:pointer;transition:.15s}
+  .seg button.active{background:var(--green);color:var(--cream)}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);font-family:var(--sans);font-weight:650;font-size:13.5px;
+    padding:8px 15px;border-radius:999px;cursor:pointer;box-shadow:var(--shadow);transition:.15s}
+  .btn:hover{border-color:#d8d0c2;transform:translateY(-1px)}
+  .spacer{flex:1 1 auto}
+
+  /* Progress */
+  .progress-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px 22px;margin-bottom:28px}
+  .progress-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .progress-top .lbl{font-weight:700;font-size:12.5px;letter-spacing:.06em;color:var(--muted)}
+  .progress-top .pct{font-family:var(--serif);font-size:30px;font-weight:400;color:var(--green);font-variant-numeric:tabular-nums}
+  .bar{height:12px;border-radius:999px;background:#eee8dc;overflow:hidden;margin:13px 0 9px}
+  .bar > i{display:block;height:100%;width:0%;border-radius:999px;
+    background:linear-gradient(90deg,var(--green),var(--green-3));transition:width .5s cubic-bezier(.2,.8,.2,1)}
+  .count{font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+  /* Phase */
+  .phase{margin:0 0 24px}
+  .phase-head{display:flex;align-items:center;gap:13px;margin:0 2px 13px}
+  .phase-ico{flex:none;width:42px;height:42px;border-radius:13px;background:var(--green-soft);
+    color:var(--green);display:grid;place-items:center;border:1px solid #dde7dd}
+  .phase-ico svg{width:22px;height:22px}
+  .phase-titles{flex:1 1 auto;min-width:0}
+  .phase-name{font-family:var(--serif);font-size:20px;font-weight:400;letter-spacing:-.01em;color:var(--green)}
+  .phase-desc{font-size:13px;color:var(--muted)}
+  .phase-count{flex:none;font-size:12.5px;font-weight:700;color:var(--muted);
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-variant-numeric:tabular-nums}
+
+  /* Item */
+  .item{background:var(--card);border:1px solid var(--line);border-radius:15px;margin-bottom:11px;
+    box-shadow:var(--shadow);overflow:hidden;transition:border-color .15s,background .15s}
+  .item.done{background:#f5f7f2;border-color:#dde7d9}
+  .item-row{display:flex;align-items:flex-start;gap:14px;padding:16px 17px;cursor:pointer}
+  .chk{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid #cfc8ba;background:#fff;
+    margin-top:1px;display:grid;place-items:center;cursor:pointer;transition:.15s}
+  .chk svg{width:14px;height:14px;opacity:0;transform:scale(.6);transition:.15s;color:var(--cream)}
+  .item.done .chk{background:var(--green);border-color:var(--green)}
+  .item.done .chk svg{opacity:1;transform:scale(1)}
+  .item-main{flex:1 1 auto;min-width:0}
+  .item-title{font-size:16px;font-weight:650;letter-spacing:-.005em;color:var(--ink)}
+  .item.done .item-title{color:#6a7466;text-decoration:line-through;text-decoration-color:#bcd0bf}
+  .item-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;align-items:center}
+  .owner{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;letter-spacing:.01em}
+  .owner.up{color:var(--green);background:var(--green-soft)}
+  .owner.you{color:#6f6151;background:#f1ece3}
+  .owner.both{color:#566044;background:#eaeee2}
+  .chev{flex:none;color:#bdb4a4;margin-top:4px;transition:transform .2s}
+  .item.open .chev{transform:rotate(180deg)}
+
+  .detail{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .item.open .detail{max-height:1500px}
+  .detail-in{padding:2px 17px 19px 55px;border-top:1px solid var(--line);margin-top:-1px}
+  .field{margin-top:15px}
+  .field-lbl{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .field-lbl .pip{width:7px;height:7px;border-radius:50%}
+  .pip.what{background:var(--green)} .pip.why{background:var(--taupe)}
+  .pip.benefit{background:var(--sage)} .pip.how{background:var(--sand)} .pip.verify{background:var(--slate)}
+  .field p{margin:0;font-size:14.5px;color:#3c3a33}
+  .field.benefit p{color:var(--green);font-weight:560}
+  ol.how{margin:5px 0 0;padding-left:20px}
+  ol.how li{font-size:14.5px;color:#3c3a33;margin:3px 0}
+  .verify-box{display:flex;gap:9px;align-items:flex-start;background:#edf1ec;
+    border-radius:11px;padding:10px 13px;font-size:14px;color:var(--green)}
+  .verify-box svg{flex:none;width:17px;height:17px;margin-top:1px}
+
+  /* Legend / footer */
+  .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:12.5px;color:var(--muted);
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:26px;box-shadow:var(--shadow)}
+  .legend b{color:var(--ink)}
+  .legend .owner{font-size:11px}
+  footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:32px;line-height:1.7}
+  footer .ft-brand{font-family:var(--serif);color:var(--green);font-size:15px}
+
+  @media (max-width:560px){
+    h1{font-size:30px}.detail-in{padding-left:17px}.progress-top .pct{font-size:25px}
+  }
+  @media print{
+    body{background:#fff}.toolbar{display:none}.item{break-inside:avoid;box-shadow:none}
+    .detail{max-height:none!important}.chev{display:none}.progress-card,.legend{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 13 7 13 9.5 6 13.5 18 16 11 18 13 22 13"/></svg>
+    </span>
+    <span class="wordmark">Unit<span class="wm-accent">Pulse</span></span>
+  </div>
+  <span class="brandtag"><span class="dot"></span><span data-i="brandtag"></span></span>
+  <h1 data-i="title"></h1>
+  <p class="sub" data-i="subtitle"></p>
+
+  <div class="toolbar">
+    <div class="seg" role="tablist" aria-label="Language">
+      <button id="langEn" onclick="setLang('en')">English</button>
+      <button id="langZh" onclick="setLang('zh')">中文</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn" onclick="toggleAll(true)" data-i="expandAll"></button>
+    <button class="btn" onclick="toggleAll(false)" data-i="collapseAll"></button>
+    <button class="btn" onclick="resetAll()" data-i="reset"></button>
+    <button class="btn" onclick="window.print()" data-i="print"></button>
+  </div>
+
+  <div class="progress-card">
+    <div class="progress-top">
+      <span class="lbl" data-i="progressLabel"></span>
+      <span class="pct" id="pct">0%</span>
+    </div>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="legend">
+    <span><b data-i="ownerLabel"></b>:</span>
+    <span class="owner up" data-i="ownerUp"></span>
+    <span class="owner you" data-i="ownerYou"></span>
+    <span class="owner both" data-i="ownerBoth"></span>
+    <span data-i="legendNote"></span>
+  </div>
+
+  <div id="phases"></div>
+
+  <footer>
+    <span class="ft-brand">UnitPulse</span><br>
+    <span data-i="footer1"></span><br>
+    <span data-i="footer2"></span>
+  </footer>
+</div>
+
+<script>
+/* ---------- icons ---------- */
+var IC = {
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  chev:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  verify:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  inbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  plug:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M7 8h10v3a5 5 0 0 1-10 0V8zM12 16v6"/></svg>',
+  sync:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>',
+  gauge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4M3.34 19a10 10 0 1 1 17.32 0"/><circle cx="12" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg>'
+};
+
+/* ---------- UI strings ---------- */
+var UI = {
+  en:{
+    brandtag:"Customer Onboarding", title:"UnitPulse Onboarding Checklist",
+    subtitle:"Everything we set up so your leads, conversations, and deals flow automatically — plus exactly how you'll know each piece is working before you go live.",
+    progressLabel:"OVERALL PROGRESS", expandAll:"Expand all", collapseAll:"Collapse all",
+    reset:"Reset progress", print:"Print / Save PDF",
+    ownerLabel:"Done by", ownerUp:"UnitPulse", ownerYou:"You", ownerBoth:"UnitPulse + You",
+    legendNote:"— who handles each step. “You” steps need a quick input or confirmation from your team.",
+    whatLabel:"What this is", whyLabel:"Why it matters", benefitLabel:"What you get",
+    howLabel:"How it's set up", verifyLabel:"How you'll know it's done",
+    countTpl:function(d,n){return d+" of "+n+" steps complete";},
+    footer1:"Onboarding checklist — based on the Workspace Onboarding Setup (#1034) and Onboarding Health Panel (#1018).",
+    footer2:"Your progress is saved automatically in this browser. Use Print / Save PDF to share a snapshot."
+  },
+  zh:{
+    brandtag:"客户对接 Onboarding", title:"UnitPulse 客户对接清单",
+    subtitle:"我们为你配置的全部内容——让线索、对话与成交自动流转；并清楚说明在正式上线前，如何确认每一项都已正常运转。",
+    progressLabel:"总体进度", expandAll:"全部展开", collapseAll:"全部收起",
+    reset:"重置进度", print:"打印 / 保存 PDF",
+    ownerLabel:"负责方", ownerUp:"UnitPulse", ownerYou:"你", ownerBoth:"UnitPulse + 你",
+    legendNote:"— 每一步由谁完成。标注“你”的步骤需要你的团队提供少量信息或进行确认。",
+    whatLabel:"这是什么", whyLabel:"为什么重要", benefitLabel:"你能获得",
+    howLabel:"如何配置", verifyLabel:"如何确认完成",
+    countTpl:function(d,n){return "共 "+n+" 步，已完成 "+d+" 步";},
+    footer1:"客户对接清单 —— 基于 Workspace Onboarding Setup（#1034）与 Onboarding Health Panel（#1018）。",
+    footer2:"进度会自动保存在本浏览器中。点击“打印 / 保存 PDF”即可导出快照分享。"
+  }
+};
+
+/* ---------- content ---------- */
+var PHASES = [
+ {icon:"inbox",
+  en:{name:"Phase 1 · Lead Capture Channels", desc:"The ways leads reach you — email, phone, and text — all captured automatically."},
+  zh:{name:"阶段一 · 线索接收渠道", desc:"线索触达你的方式——邮件、电话、短信——全部自动捕获。"},
+  items:[
+   {id:"p1-1", owner:"up",
+    en:{title:"Dedicated lead email address",
+      what:"We provision a dedicated inbound email for you, e.g. leads-yourco@mail.unitpulse.ai, built to capture and parse email leads.",
+      why:"Email is a top lead source (listing sites, referrals, partners). A dedicated address lets UnitPulse capture every email lead instead of it sitting in a personal inbox.",
+      benefit:"Every email lead becomes a structured prospect automatically — no copy-paste, no leads buried in someone's inbox.",
+      how:["UnitPulse auto-generates your address (you can customize the prefix).","We send a test email and confirm it is delivered and parsed.","Marked complete only after the test ping succeeds."],
+      verify:"Onboarding Panel shows “Dedicated Email — configured & verified” as ✅."},
+    zh:{title:"专属线索邮箱",
+      what:"我们为你开通一个专属的接收邮箱，例如 leads-yourco@mail.unitpulse.ai，用于自动捕获并解析邮件线索。",
+      why:"邮件是最重要的线索来源之一（房源网站、转介绍、合作方）。专属邮箱让 UnitPulse 捕获每一封邮件线索，而不是让它躺在某个人的收件箱里。",
+      benefit:"每一封邮件线索都会被自动转化为结构化潜客——无需复制粘贴，也不会有线索被埋没在个人邮箱中。",
+      how:["UnitPulse 自动生成你的邮箱地址（前缀可自定义）。","我们发送一封测试邮件，确认可正常送达并解析。","测试通过后才标记为完成。"],
+      verify:"对接面板中“专属邮箱 — 已配置并验证”显示为 ✅。"}},
+
+   {id:"p1-2", owner:"both",
+    en:{title:"Forward your own email to UnitPulse",
+      what:"If you already advertise your own address (e.g. leads@yourco.com), forward it to your new UnitPulse address.",
+      why:"You keep the address your listings and partners already know, while UnitPulse silently captures everything behind it.",
+      benefit:"No need to update listings or notify partners — your existing lead flow is captured from day one.",
+      how:["Add a forwarding rule in your mail provider (Gmail / Outlook / etc.) pointing your address to the UnitPulse address we give you.","Send a test from an outside account.","Confirm it appears as a prospect in UnitPulse."],
+      verify:"A test email sent to your public address shows up as a prospect in UnitPulse."},
+    zh:{title:"将你自己的邮箱转发到 UnitPulse",
+      what:"如果你已经在对外使用自己的邮箱（如 leads@yourco.com），把它转发到我们为你开通的 UnitPulse 邮箱。",
+      why:"你可以继续使用房源和合作方已熟知的邮箱，同时 UnitPulse 在背后静默捕获全部线索。",
+      benefit:"无需修改房源信息或通知合作方——现有线索从第一天起就被完整捕获。",
+      how:["在你的邮件服务商（Gmail / Outlook 等）中新增一条转发规则，将你的邮箱转发到我们提供的 UnitPulse 邮箱。","用一个外部账号发送测试邮件。","确认它在 UnitPulse 中显示为潜客。"],
+      verify:"向你的对外邮箱发送的测试邮件，会在 UnitPulse 中显示为一条潜客记录。"}},
+
+   {id:"p1-3", owner:"up",
+    en:{title:"Dedicated phone number (Twilio)",
+      what:"We provision a dedicated phone number in your preferred area code for both calls and texts.",
+      why:"A trackable number means every call and text can be logged, routed, and synced — and keeps your business line separate.",
+      benefit:"Every inbound call and text is tied to a prospect record, on a local-area-code number that builds trust with renters.",
+      how:["Tell us your preferred area code / region (or we suggest one from your property location).","UnitPulse searches available numbers and provisions one.","Inbound voice routing and SMS are configured and tested."],
+      verify:"Onboarding Panel shows “Twilio number — provisioned & verified” as ✅."},
+    zh:{title:"专属电话号码（Twilio）",
+      what:"我们按你指定的区号开通一个专属电话号码，可同时用于来电和短信。",
+      why:"可追踪的号码意味着每一通来电和短信都能被记录、路由并同步，同时让你的业务专线保持独立。",
+      benefit:"每一通来电和短信都关联到潜客记录，并使用本地区号的号码，更易获得租客信任。",
+      how:["告诉我们你想要的区号 / 区域（也可由我们根据房源所在地推荐）。","UnitPulse 搜索可用号码并完成开通。","配置并测试来电语音路由与短信。"],
+      verify:"对接面板中“Twilio 号码 — 已开通并验证”显示为 ✅。"}},
+
+   {id:"p1-4", owner:"up",
+    en:{title:"Two-way SMS",
+      what:"Enable two-way texting on your dedicated number so agents can text prospects and replies flow back in.",
+      why:"Renters increasingly prefer text. Two-way SMS keeps the whole conversation in one place and synced to your PMS.",
+      benefit:"Your team texts prospects from inside UnitPulse and every reply is captured — full history, nothing lost on personal phones.",
+      how:["UnitPulse sends an automated test SMS.","A reply is sent back to the number.","Step completes only when the full round-trip is confirmed."],
+      verify:"Onboarding Panel shows “SMS two-way sync — verified” as ✅."},
+    zh:{title:"双向短信",
+      what:"在你的专属号码上启用双向短信，让坐席可以给潜客发短信，且对方回复也能同步回系统。",
+      why:"越来越多租客偏好短信沟通。双向短信把完整对话集中在一处，并同步到你的 PMS。",
+      benefit:"你的团队在 UnitPulse 内即可给潜客发短信，每条回复都被捕获——完整记录，不会遗留在个人手机上。",
+      how:["UnitPulse 发送一条自动测试短信。","向该号码回复一条短信。","完成完整往返验证后才标记为完成。"],
+      verify:"对接面板中“短信双向同步 — 已验证”显示为 ✅。"}}
+  ]},
+
+ {icon:"shield",
+  en:{name:"Phase 2 · Your Team & Data Security", desc:"A private, properly-permissioned workspace for your organization and agents."},
+  zh:{name:"阶段二 · 团队与数据安全", desc:"为你的机构与坐席建立一个私密、权限合理的专属工作区。"},
+  items:[
+   {id:"p2-1", owner:"up",
+    en:{title:"Dedicated department / workspace",
+      what:"We create a department in the workspace scoped specifically to your organization.",
+      why:"It isolates your data and team from every other company on the platform.",
+      benefit:"Your leads, conversations, and reports live in a clean, dedicated space — organized and private to your org.",
+      how:["UnitPulse creates the department via the workspace API.","It is named for your organization.","Confirmed in the Onboarding Panel."],
+      verify:"Onboarding Panel shows “Department — created” as ✅."},
+    zh:{title:"专属部门 / 工作区",
+      what:"我们在工作区中创建一个专属于你机构的部门。",
+      why:"它将你的数据与团队同平台上的其他公司彻底隔离。",
+      benefit:"你的线索、对话与报表都集中在一个干净、专属的空间里——井然有序，且仅属于你的机构。",
+      how:["UnitPulse 通过工作区 API 创建该部门。","以你的机构名称命名。","在对接面板中确认。"],
+      verify:"对接面板中“部门 — 已创建”显示为 ✅。"}},
+
+   {id:"p2-2", owner:"up",
+    en:{title:"Minimum-privilege permissions",
+      what:"We apply least-privilege permissions so your agents can only see your organization's data — with no cross-tenant visibility.",
+      why:"Security and privacy: people should access only what they need, and never another company's data.",
+      benefit:"Renter and deal data stays protected; you meet data-privacy expectations and reduce internal risk.",
+      how:["The minimum-privilege permission set is applied by default when your department is created.","We verify no cross-organization access exists."],
+      verify:"Onboarding Panel shows “Minimum permissions — applied” as ✅."},
+    zh:{title:"最小化权限",
+      what:"我们采用最小权限原则，使你的坐席只能看到本机构的数据——彼此机构之间互不可见。",
+      why:"出于安全与隐私：每个人只应访问其工作所需，绝不应看到其他公司的数据。",
+      benefit:"租客与成交数据受到保护；满足数据隐私要求，降低内部风险。",
+      how:["创建部门时默认应用最小权限集。","我们验证不存在任何跨机构的访问。"],
+      verify:"对接面板中“最小权限 — 已应用”显示为 ✅。"}},
+
+   {id:"p2-3", owner:"both",
+    en:{title:"Assign your agents",
+      what:"Add your leasing agents to your department with the right access.",
+      why:"Agents need access to handle leads, conversations, and tours day to day.",
+      benefit:"Your team can start working leads immediately, each with exactly the access they need.",
+      how:["Provide your agent list (names / emails).","UnitPulse assigns them to your department.","You confirm the roster looks right."],
+      verify:"All your agents appear under your department with the correct access."},
+    zh:{title:"分配你的坐席",
+      what:"将你的租赁坐席加入你的部门，并赋予合适的访问权限。",
+      why:"坐席需要相应权限来日常处理线索、对话和带看。",
+      benefit:"你的团队可立即开始跟进线索，且每个人都拥有恰好所需的权限。",
+      how:["提供你的坐席名单（姓名 / 邮箱）。","UnitPulse 将他们分配到你的部门。","你确认名单无误。"],
+      verify:"你的所有坐席都出现在你的部门下，并拥有正确的访问权限。"}},
+
+   {id:"p2-4", owner:"up",
+    en:{title:"Forwarding & routing rules",
+      what:"We configure rules that route inbound email (and calls, if you're migrating a number) to the correct department and org, with a fallback quarantine for anything unmatched.",
+      why:"Ensures every lead lands in the right place — and the fallback means nothing silently disappears.",
+      benefit:"Leads are auto-sorted to your team; unknown or misrouted items are quarantined for review instead of lost.",
+      how:["UnitPulse creates an inbound forwarding rule (your domain / address → your department).","Adds a fallback “quarantine” rule for unmatched mail (visible to admin).","Tests with a synthetic email before marking complete."],
+      verify:"Onboarding Panel shows “Forwarding rules — active” as ✅."},
+    zh:{title:"转发与路由规则",
+      what:"我们配置规则，把入站邮件（如迁移号码则含来电）路由到正确的部门与机构，并为未匹配的内容设置兜底隔离队列。",
+      why:"确保每条线索都进入正确位置——兜底规则则保证不会有内容被悄无声息地丢失。",
+      benefit:"线索自动分拣到你的团队；未知或路由错误的内容会进入隔离队列待审，而不是丢失。",
+      how:["UnitPulse 创建入站转发规则（你的域名 / 邮箱 → 你的部门）。","为未匹配邮件添加兜底“隔离”规则（管理员可见）。","用一封合成测试邮件验证后才标记完成。"],
+      verify:"对接面板中“转发规则 — 已生效”显示为 ✅。"}}
+  ]},
+
+ {icon:"plug",
+  en:{name:"Phase 3 · Connect Channels & Auto Mode", desc:"Turn the email and number into live, monitored lead channels — and choose how each behaves."},
+  zh:{name:"阶段三 · 渠道接入与 Auto 模式", desc:"将邮箱和号码变成实时监控的线索渠道，并选择每个渠道的运行方式。"},
+  items:[
+   {id:"p3-1", owner:"up",
+    en:{title:"Email Leads channel",
+      what:"We add your verified email to your Listing Channels as the Email Leads channel.",
+      why:"This is what turns the provisioned email into a live, monitored lead source inside the product.",
+      benefit:"Email leads now flow into your pipeline as trackable prospects.",
+      how:["After Phase 1–2, UnitPulse pre-fills the email channel.","We confirm forwarding is verified.","Save the channel."],
+      verify:"Onboarding Panel shows “Email channel — configured” as ✅."},
+    zh:{title:"邮件线索渠道",
+      what:"我们把已验证的邮箱加入你的 Listing Channels，作为“邮件线索”渠道。",
+      why:"这一步才真正把已开通的邮箱变成产品内实时监控的线索来源。",
+      benefit:"邮件线索从此作为可追踪的潜客进入你的流水线。",
+      how:["完成阶段一至二后，UnitPulse 预填该邮件渠道。","确认转发已验证。","保存渠道。"],
+      verify:"对接面板中“邮件渠道 — 已配置”显示为 ✅。"}},
+
+   {id:"p3-2", owner:"both",
+    en:{title:"Call-in channel",
+      what:"We add your Twilio number as the Call-in channel and you choose how calls are handled (IVR / agent ring).",
+      why:"Connects your phone number to the lead pipeline and call routing.",
+      benefit:"Inbound calls become tracked leads and route to the right agents.",
+      how:["UnitPulse pre-fills the number.","You choose Auto or Manual mode.","Confirm and save."],
+      verify:"Onboarding Panel shows “Call-in channel — configured, mode set” as ✅."},
+    zh:{title:"来电渠道",
+      what:"我们把 Twilio 号码加入为“来电”渠道，由你选择来电处理方式（IVR / 坐席振铃）。",
+      why:"将你的电话号码接入线索流水线与来电路由。",
+      benefit:"来电成为可追踪的线索，并路由到正确的坐席。",
+      how:["UnitPulse 预填该号码。","你选择 Auto（自动）或 Manual（手动）模式。","确认并保存。"],
+      verify:"对接面板中“来电渠道 — 已配置且已设置模式”显示为 ✅。"}},
+
+   {id:"p3-3", owner:"up",
+    en:{title:"SMS channel",
+      what:"We add the same Twilio number as the SMS channel with two-way sync.",
+      why:"Brings texting into the pipeline alongside calls and email.",
+      benefit:"Text leads and conversations are captured and synced to your PMS.",
+      how:["UnitPulse pre-fills the number.","Two-way sync is verified.","Save the channel."],
+      verify:"The SMS channel shows two-way sync verified as ✅."},
+    zh:{title:"短信渠道",
+      what:"我们把同一个 Twilio 号码加入为“短信”渠道，并启用双向同步。",
+      why:"让短信与来电、邮件一起纳入线索流水线。",
+      benefit:"短信线索与对话被捕获并同步到你的 PMS。",
+      how:["UnitPulse 预填该号码。","验证双向同步。","保存渠道。"],
+      verify:"短信渠道显示双向同步已验证 ✅。"}},
+
+   {id:"p3-4", owner:"both",
+    en:{title:"Set Auto / Manual mode per channel",
+      what:"Explicitly set each channel to Auto (system processes leads automatically) or Manual (an agent handles), and confirm.",
+      why:"This was the key gap in a past onboarding — channels left out of Auto mode silently lost leads. Mode must be a deliberate choice, not a default.",
+      benefit:"You decide exactly how each channel behaves; Auto mode means no lead ever waits unprocessed.",
+      how:["For each channel, review the recommended mode.","Deliberately confirm Auto or Manual.","Save with explicit confirmation."],
+      verify:"Onboarding Panel shows each inbound channel in its intended mode — no ❌ “Not in Auto mode” flags."},
+    zh:{title:"为每个渠道设置 Auto / Manual 模式",
+      what:"为每个渠道明确设置 Auto（系统自动处理线索）或 Manual（由坐席处理），并确认。",
+      why:"这是以往对接中的关键缺口——未设为 Auto 模式的渠道会悄悄丢失线索。模式必须是有意识的选择，而非沿用默认值。",
+      benefit:"你来决定每个渠道的具体行为；Auto 模式意味着任何线索都不会停留在未处理状态。",
+      how:["逐个渠道查看推荐模式。","明确确认 Auto 或 Manual。","在明确确认后保存。"],
+      verify:"对接面板中每个入站渠道都处于既定模式——没有 ❌“未设为 Auto 模式”的告警。"}}
+  ]},
+
+ {icon:"sync",
+  en:{name:"Phase 4 · PMS Integration Health", desc:"Confirm your PMS (e.g. Yardi / AppFolio) stays in sync with UnitPulse, both directions."},
+  zh:{name:"阶段四 · PMS 集成健康度", desc:"确认你的 PMS（如 Yardi / AppFolio）与 UnitPulse 双向保持同步。"},
+  items:[
+   {id:"p4-1", owner:"both",
+    en:{title:"PMS account connection & permissions",
+      what:"Connect your PMS account(s) and authorize the required permission scopes — including SMS.",
+      why:"The PMS is your system of record; UnitPulse must connect with the right scopes to sync data both ways. A missing SMS scope is what broke conversation sync in a past onboarding.",
+      benefit:"Your PMS and UnitPulse stay in sync automatically — no double data entry.",
+      how:["Authorize your PMS account with UnitPulse.","Grant the required scopes, including SMS permission.","We verify the connection is healthy."],
+      verify:"Onboarding Panel shows PMS Accounts as ✅ Normal (not ⚠️ “SMS sync broken”)."},
+    zh:{title:"PMS 账号连接与权限",
+      what:"连接你的 PMS 账号，并授权所需的权限范围——包括短信权限。",
+      why:"PMS 是你的权威数据源；UnitPulse 必须以正确的权限范围连接，才能双向同步数据。短信权限缺失，正是以往对接中导致对话同步失败的原因。",
+      benefit:"你的 PMS 与 UnitPulse 自动保持同步——无需重复录入。",
+      how:["在 UnitPulse 中授权你的 PMS 账号。","授予所需权限范围，包括短信权限。","我们验证连接状态正常。"],
+      verify:"对接面板中 PMS 账号显示为 ✅ 正常（而非 ⚠️“短信同步异常”）。"}},
+
+   {id:"p4-2", owner:"up",
+    en:{title:"Prospect sync (UnitPulse → PMS)",
+      what:"Confirm new prospects created in UnitPulse flow into your PMS.",
+      why:"Keeps your PMS the single source of truth for every lead.",
+      benefit:"Every lead UnitPulse captures appears in your PMS automatically.",
+      how:["UnitPulse runs a test prospect sync.","We confirm it appears in your PMS."],
+      verify:"Onboarding Panel shows “Prospect Sync — Normal” as ✅."},
+    zh:{title:"潜客同步（UnitPulse → PMS）",
+      what:"确认在 UnitPulse 中创建的新潜客能流入你的 PMS。",
+      why:"让 PMS 成为每条线索的唯一权威记录。",
+      benefit:"UnitPulse 捕获的每条线索都会自动出现在你的 PMS 中。",
+      how:["UnitPulse 运行一次测试潜客同步。","确认其出现在你的 PMS 中。"],
+      verify:"对接面板中“潜客同步 — 正常”显示为 ✅。"}},
+
+   {id:"p4-3", owner:"both",
+    en:{title:"SMS conversation sync (full thread)",
+      what:"Confirm full SMS conversations — not just summaries — sync to your PMS.",
+      why:"In a past onboarding this synced as “summary only,” losing conversation detail. It depends on the SMS permission scope above.",
+      benefit:"Complete texting history lives in your PMS for compliance and continuity.",
+      how:["Ensure the SMS permission scope is granted (see PMS connection step).","Verify the two-way SMS webhook endpoint is reachable.","Run a test SMS and confirm the full thread appears in the PMS."],
+      verify:"Onboarding Panel shows “SMS Conversation — Normal” (not ⚠️ “Summary only”)."},
+    zh:{title:"短信对话同步（完整记录）",
+      what:"确认完整的短信对话——而不仅是摘要——同步到你的 PMS。",
+      why:"在以往对接中，这里曾以“仅摘要”方式同步，丢失了对话细节。它依赖上面的短信权限范围。",
+      benefit:"完整的短信记录保存在你的 PMS 中，满足合规与业务连续性需求。",
+      how:["确认已授予短信权限范围（见“PMS 账号连接”步骤）。","验证双向短信 webhook 端点可达。","发送一条测试短信，确认完整对话出现在 PMS 中。"],
+      verify:"对接面板中“短信对话 — 正常”（而非 ⚠️“仅摘要”）。"}},
+
+   {id:"p4-4", owner:"up",
+    en:{title:"Tour sync",
+      what:"Confirm scheduled tours sync between UnitPulse and your PMS.",
+      why:"Tours are a key conversion step; both systems must agree on the schedule.",
+      benefit:"Your team and your PMS share one accurate tour schedule.",
+      how:["UnitPulse runs a test tour sync.","We confirm it in the PMS."],
+      verify:"Onboarding Panel shows “Tour Sync — Normal” as ✅."},
+    zh:{title:"带看同步",
+      what:"确认已预约的带看在 UnitPulse 与你的 PMS 之间同步。",
+      why:"带看是关键的转化环节；两个系统必须对日程保持一致。",
+      benefit:"你的团队与 PMS 共享同一份准确的带看日程。",
+      how:["UnitPulse 运行一次测试带看同步。","在 PMS 中确认。"],
+      verify:"对接面板中“带看同步 — 正常”显示为 ✅。"}}
+  ]},
+
+ {icon:"doc",
+  en:{name:"Phase 5 · Application & Contract Pipeline", desc:"From application to signed lease — captured and synced end to end."},
+  zh:{name:"阶段五 · 申请与合同流程", desc:"从申请到签署租约——端到端被捕获并同步。"},
+  items:[
+   {id:"p5-1", owner:"up",
+    en:{title:"Application auto-parse & sync",
+      what:"Confirm submitted applications are auto-parsed and synced both ways (UnitPulse ↔ PMS).",
+      why:"Manual application entry is slow and error-prone.",
+      benefit:"Applications are captured and structured automatically, moving renters through faster.",
+      how:["UnitPulse verifies auto-parse on a sample application.","We confirm two-way application sync."],
+      verify:"Panel shows “Application auto-parse — Normal” and “Application sync — Normal” as ✅."},
+    zh:{title:"申请自动解析与同步",
+      what:"确认提交的申请被自动解析，并双向同步（UnitPulse ↔ PMS）。",
+      why:"人工录入申请既慢又易出错。",
+      benefit:"申请被自动捕获并结构化，让租客流程推进更快。",
+      how:["UnitPulse 用一份样例申请验证自动解析。","确认申请双向同步。"],
+      verify:"面板中“申请自动解析 — 正常”与“申请同步 — 正常”均显示为 ✅。"}},
+
+   {id:"p5-2", owner:"up",
+    en:{title:"Contract sent / executed sync",
+      what:"Confirm contract “sent” and “executed” statuses sync from your PMS into UnitPulse.",
+      why:"Closes the loop from lead → application → signed lease in a single view.",
+      benefit:"You see deal status end to end without checking multiple systems.",
+      how:["UnitPulse verifies contract-sent and contract-executed sync against a sample deal."],
+      verify:"Panel shows “Contract sent sync” and “Contract executed sync” as ✅ Normal."},
+    zh:{title:"合同发送 / 签署同步",
+      what:"确认合同“已发送”与“已签署”状态从你的 PMS 同步进入 UnitPulse。",
+      why:"在同一个视图中打通“线索 → 申请 → 签署租约”的闭环。",
+      benefit:"无需切换多个系统，即可端到端查看成交状态。",
+      how:["UnitPulse 用一笔样例成交验证“合同已发送”与“合同已签署”同步。"],
+      verify:"面板中“合同发送同步”与“合同签署同步”显示为 ✅ 正常。"}}
+  ]},
+
+ {icon:"gauge",
+  en:{name:"Phase 6 · Monitoring & Go-Live Check", desc:"Make sure nothing can break silently — and confirm everything is green before launch."},
+  zh:{name:"阶段六 · 监控与上线复查", desc:"确保任何问题都不会被悄悄掩盖——并在上线前确认一切正常。"},
+  items:[
+   {id:"p6-1", owner:"up",
+    en:{title:"Delay monitors",
+      what:"Confirm delay monitors are active for application submission, application approval, and contract approval.",
+      why:"They flag when a deal stalls, so nothing sits forgotten.",
+      benefit:"You're alerted to bottlenecks early and keep deals moving.",
+      how:["UnitPulse confirms each monitor is active with sensible thresholds."],
+      verify:"Panel shows all three delay monitors as ✅ Normal."},
+    zh:{title:"延迟监控",
+      what:"确认针对“申请提交”、“申请审批”和“合同审批”的延迟监控均已启用。",
+      why:"它们会在成交停滞时发出提示，避免无人跟进。",
+      benefit:"你能尽早发现瓶颈，让成交持续推进。",
+      how:["UnitPulse 确认每个监控均已启用且阈值合理。"],
+      verify:"面板中三个延迟监控均显示为 ✅ 正常。"}},
+
+   {id:"p6-2", owner:"both",
+    en:{title:"Final Onboarding Panel review & snapshot",
+      what:"Review the Onboarding Health Panel together, resolve any remaining ❌ / ⚠️ action items, and export a snapshot.",
+      why:"A single end-to-end check ensures nothing is silently broken before go-live — exactly the problem the panel was built to prevent.",
+      benefit:"You go live with confidence: every channel and sync confirmed green, with a shareable record for your IT team.",
+      how:["Open the Onboarding Health Panel.","Confirm overall completion (all checks passing).","Work any open action items to resolution.","Export a PDF / CSV snapshot for your records."],
+      verify:"Panel shows all checks passing and a snapshot has been exported."},
+    zh:{title:"最终对接面板复查与快照",
+      what:"一起复查“对接健康面板”，解决所有剩余的 ❌ / ⚠️ 行动项，并导出一份快照。",
+      why:"一次端到端的整体检查，确保上线前没有任何问题被悄悄掩盖——这正是该面板要解决的核心问题。",
+      benefit:"你可以放心上线：每个渠道与同步都确认为绿色，并有一份可分享给你 IT 团队的记录。",
+      how:["打开对接健康面板。","确认整体完成度（所有检查项通过）。","逐一解决所有未结的行动项。","导出 PDF / CSV 快照存档。"],
+      verify:"面板显示所有检查项通过，且已导出快照。"}}
+  ]}
+];
+
+/* ---------- state ---------- */
+var LANG = "en", DONE = {}, store = {
+  get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},
+  set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+};
+try{
+  var sl=store.get("up_lang"); if(sl==="en"||sl==="zh") LANG=sl;
+  var sd=store.get("up_done"); if(sd) DONE=JSON.parse(sd)||{};
+}catch(e){DONE={};}
+
+var ALL_ITEMS=[]; PHASES.forEach(function(p){p.items.forEach(function(it){ALL_ITEMS.push(it.id)})});
+
+function save(){ store.set("up_lang",LANG); store.set("up_done",JSON.stringify(DONE)); }
+
+/* ---------- render ---------- */
+function applyStatic(){
+  var u=UI[LANG];
+  document.documentElement.lang = (LANG==="zh"?"zh-CN":"en");
+  document.querySelectorAll("[data-i]").forEach(function(el){
+    var k=el.getAttribute("data-i"); if(u[k]!=null) el.textContent=u[k];
+  });
+  document.getElementById("langEn").classList.toggle("active",LANG==="en");
+  document.getElementById("langZh").classList.toggle("active",LANG==="zh");
+  document.title = u.title;
+}
+
+function renderPhases(){
+  var u=UI[LANG], root=document.getElementById("phases"), html="";
+  PHASES.forEach(function(p){
+    var loc=p[LANG];
+    var total=p.items.length, done=p.items.filter(function(it){return DONE[it.id]}).length;
+    html+='<section class="phase">';
+    html+='<div class="phase-head"><div class="phase-ico">'+IC[p.icon]+'</div>'+
+          '<div class="phase-titles"><div class="phase-name">'+loc.name+'</div>'+
+          '<div class="phase-desc">'+loc.desc+'</div></div>'+
+          '<span class="phase-count">'+done+'/'+total+'</span></div>';
+    p.items.forEach(function(it){
+      var d=it[LANG], isDone=!!DONE[it.id];
+      var ownerCls=it.owner, ownerTxt=(it.owner==="up"?u.ownerUp:it.owner==="you"?u.ownerYou:u.ownerBoth);
+      var howLis=d.how.map(function(s){return "<li>"+s+"</li>"}).join("");
+      html+='<div class="item'+(isDone?' done':'')+'" id="'+it.id+'">';
+      html+= '<div class="item-row" onclick="toggleOpen(\''+it.id+'\')">';
+      html+=  '<span class="chk" role="checkbox" aria-checked="'+isDone+'" tabindex="0" '+
+              'onclick="event.stopPropagation();toggleDone(\''+it.id+'\')" '+
+              'onkeydown="if(event.key===\' \'||event.key===\'Enter\'){event.preventDefault();event.stopPropagation();toggleDone(\''+it.id+'\')}">'+IC.check+'</span>';
+      html+=  '<div class="item-main"><div class="item-title">'+d.title+'</div>'+
+              '<div class="item-meta"><span class="owner '+ownerCls+'">'+ownerTxt+'</span></div></div>';
+      html+=  '<span class="chev">'+IC.chev+'</span>';
+      html+= '</div>';
+      html+= '<div class="detail"><div class="detail-in">'+
+              '<div class="field what"><div class="field-lbl"><span class="pip what"></span>'+u.whatLabel+'</div><p>'+d.what+'</p></div>'+
+              '<div class="field why"><div class="field-lbl"><span class="pip why"></span>'+u.whyLabel+'</div><p>'+d.why+'</p></div>'+
+              '<div class="field benefit"><div class="field-lbl"><span class="pip benefit"></span>'+u.benefitLabel+'</div><p>'+d.benefit+'</p></div>'+
+              '<div class="field how"><div class="field-lbl"><span class="pip how"></span>'+u.howLabel+'</div><ol class="how">'+howLis+'</ol></div>'+
+              '<div class="field verify"><div class="field-lbl"><span class="pip verify"></span>'+u.verifyLabel+'</div>'+
+                '<div class="verify-box">'+IC.verify+'<span>'+d.verify+'</span></div></div>'+
+             '</div></div>';
+      html+='</div>';
+    });
+    html+='</section>';
+  });
+  root.innerHTML=html;
+}
+
+function updateProgress(){
+  var total=ALL_ITEMS.length, done=ALL_ITEMS.filter(function(id){return DONE[id]}).length;
+  var pct= total? Math.round(done/total*100):0;
+  document.getElementById("pct").textContent=pct+"%";
+  document.getElementById("barFill").style.width=pct+"%";
+  document.getElementById("count").textContent=UI[LANG].countTpl(done,total);
+}
+
+function refreshPhaseCounts(){
+  var sections=document.querySelectorAll(".phase");
+  PHASES.forEach(function(p,i){
+    var total=p.items.length, done=p.items.filter(function(it){return DONE[it.id]}).length;
+    var c=sections[i] && sections[i].querySelector(".phase-count");
+    if(c) c.textContent=done+'/'+total;
+  });
+}
+
+/* ---------- actions ---------- */
+function toggleDone(id){
+  DONE[id]=!DONE[id];
+  var el=document.getElementById(id);
+  if(el){ el.classList.toggle("done",!!DONE[id]);
+    var chk=el.querySelector(".chk"); if(chk) chk.setAttribute("aria-checked",!!DONE[id]); }
+  updateProgress(); refreshPhaseCounts(); save();
+}
+function toggleOpen(id){ var el=document.getElementById(id); if(el) el.classList.toggle("open"); }
+function toggleAll(open){ document.querySelectorAll(".item").forEach(function(el){el.classList.toggle("open",open)}); }
+function resetAll(){
+  var msg = LANG==="zh" ? "确定要清除所有勾选进度吗？" : "Clear all checked progress?";
+  if(!confirm(msg)) return;
+  DONE={}; save(); renderPhases(); updateProgress();
+}
+function setLang(l){ LANG=l; save(); applyStatic(); renderPhases(); updateProgress(); }
+
+/* ---------- init ---------- */
+applyStatic(); renderPhases(); updateProgress();
+</script>
+</body>
+</html>
