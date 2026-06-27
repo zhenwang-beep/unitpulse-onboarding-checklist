@@ -93,6 +93,10 @@
   .owner.up{color:var(--green);background:var(--green-soft)}
   .owner.you{color:#6f6151;background:#f1ece3}
   .owner.both{color:#566044;background:#eaeee2}
+  .dir{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid #d9d3c6;color:#6b6358;background:#faf8f3;letter-spacing:.01em}
+  .dir.out{color:#1a4534;border-color:#cfe0d2;background:#eef3ee}
+  .dir.in{color:#8a5a2b;border-color:#e8d8c2;background:#f7efe4}
+  .dir.two{color:#566044;border-color:#dde3d2;background:#eef1e7}
   .chev{flex:none;color:#bdb4a4;margin-top:4px;transition:transform .2s}
   .item.open .chev{transform:rotate(180deg)}
 
@@ -202,6 +206,7 @@ var UI = {
     progressLabel:"OVERALL PROGRESS", expandAll:"Expand all", collapseAll:"Collapse all",
     reset:"Reset progress", print:"Print / Save PDF",
     ownerLabel:"Done by", ownerUp:"UnitPulse", ownerYou:"You", ownerBoth:"UnitPulse + You",
+    dirOut:"UnitPulse → PMS", dirIn:"PMS → UnitPulse", dirTwo:"Two-way",
     legendNote:"— who handles each step. “You” steps need a quick input or confirmation from your team.",
     whatLabel:"What this is", whyLabel:"Why it matters", benefitLabel:"What you get",
     howLabel:"How it's set up", verifyLabel:"How you'll know it's done",
@@ -215,6 +220,7 @@ var UI = {
     progressLabel:"总体进度", expandAll:"全部展开", collapseAll:"全部收起",
     reset:"重置进度", print:"打印 / 保存 PDF",
     ownerLabel:"负责方", ownerUp:"UnitPulse", ownerYou:"你", ownerBoth:"UnitPulse + 你",
+    dirOut:"UnitPulse → PMS", dirIn:"PMS → UnitPulse", dirTwo:"双向",
     legendNote:"— 每一步由谁完成。标注“你”的步骤需要你的团队提供少量信息或进行确认。",
     whatLabel:"这是什么", whyLabel:"为什么重要", benefitLabel:"你能获得",
     howLabel:"如何配置", verifyLabel:"如何确认完成",
@@ -410,10 +416,10 @@ var PHASES = [
   ]},
 
  {icon:"sync",
-  en:{name:"Phase 4 · PMS Integration Health", desc:"Confirm your PMS (e.g. Yardi / AppFolio) stays in sync with UnitPulse, both directions."},
-  zh:{name:"阶段四 · PMS 集成健康度", desc:"确认你的 PMS（如 Yardi / AppFolio）与 UnitPulse 双向保持同步。"},
+  en:{name:"Phase 4 · PMS Integration Health", desc:"Confirm your PMS (e.g. Yardi / AppFolio) stays in sync with UnitPulse in both directions. Outbound flows (UnitPulse → PMS) are below; the inbound flows (PMS → UnitPulse) — applications & contracts — are in Phase 5."},
+  zh:{name:"阶段四 · PMS 集成健康度", desc:"确认你的 PMS（如 Yardi / AppFolio）与 UnitPulse 双向保持同步。出站（UnitPulse → PMS）流程见下方；入站（PMS → UnitPulse）流程——申请与合同——见阶段五。"},
   items:[
-   {id:"p4-1", owner:"both",
+   {id:"p4-1", owner:"both", dir:"two",
     en:{title:"PMS account connection & permissions",
       what:"Connect your PMS account(s) and authorize the required permission scopes — including SMS.",
       why:"The PMS is your system of record; UnitPulse must connect with the right scopes to sync data both ways. A missing SMS scope is what broke conversation sync in a past onboarding.",
@@ -427,7 +433,7 @@ var PHASES = [
       how:["在 UnitPulse 中授权你的 PMS 账号。","授予所需权限范围，包括短信权限。","我们验证连接状态正常。"],
       verify:"对接面板中 PMS 账号显示为 ✅ 正常（而非 ⚠️“短信同步异常”）。"}},
 
-   {id:"p4-2", owner:"up",
+   {id:"p4-2", owner:"up", dir:"out",
     en:{title:"Prospect sync (UnitPulse → PMS)",
       what:"Confirm new prospects created in UnitPulse flow into your PMS.",
       why:"Keeps your PMS the single source of truth for every lead.",
@@ -441,7 +447,7 @@ var PHASES = [
       how:["UnitPulse 运行一次测试潜客同步。","确认其出现在你的 PMS 中。"],
       verify:"对接面板中“潜客同步 — 正常”显示为 ✅。"}},
 
-   {id:"p4-3", owner:"both",
+   {id:"p4-3", owner:"both", dir:"out",
     en:{title:"SMS conversation sync (full thread)",
       what:"Confirm full SMS conversations — not just summaries — sync to your PMS.",
       why:"In a past onboarding this synced as “summary only,” losing conversation detail. It depends on the SMS permission scope above.",
@@ -455,7 +461,7 @@ var PHASES = [
       how:["确认已授予短信权限范围（见“PMS 账号连接”步骤）。","验证双向短信 webhook 端点可达。","发送一条测试短信，确认完整对话出现在 PMS 中。"],
       verify:"对接面板中“短信对话 — 正常”（而非 ⚠️“仅摘要”）。"}},
 
-   {id:"p4-4", owner:"up",
+   {id:"p4-4", owner:"up", dir:"out",
     en:{title:"Tour sync",
       what:"Confirm scheduled tours sync between UnitPulse and your PMS.",
       why:"Tours are a key conversion step; both systems must agree on the schedule.",
@@ -471,24 +477,24 @@ var PHASES = [
   ]},
 
  {icon:"doc",
-  en:{name:"Phase 5 · Application & Contract Pipeline", desc:"From application to signed lease — captured and synced end to end."},
-  zh:{name:"阶段五 · 申请与合同流程", desc:"从申请到签署租约——端到端被捕获并同步。"},
+  en:{name:"Phase 5 · Application & Contract Pipeline", desc:"The inbound direction (PMS → UnitPulse): from application to signed lease, captured and synced back into UnitPulse end to end."},
+  zh:{name:"阶段五 · 申请与合同流程", desc:"入站方向（PMS → UnitPulse）：从申请到签署租约，端到端回传并同步进入 UnitPulse。"},
   items:[
-   {id:"p5-1", owner:"up",
+   {id:"p5-1", owner:"up", dir:"in",
     en:{title:"Application auto-parse & sync",
-      what:"Confirm submitted applications are auto-parsed and synced both ways (UnitPulse ↔ PMS).",
+      what:"Confirm submitted applications are auto-parsed, and that application data syncs from your PMS back into UnitPulse (PMS → UnitPulse).",
       why:"Manual application entry is slow and error-prone.",
       benefit:"Applications are captured and structured automatically, moving renters through faster.",
       how:["UnitPulse verifies auto-parse on a sample application.","We confirm two-way application sync."],
       verify:"Panel shows “Application auto-parse — Normal” and “Application sync — Normal” as ✅."},
     zh:{title:"申请自动解析与同步",
-      what:"确认提交的申请被自动解析，并双向同步（UnitPulse ↔ PMS）。",
+      what:"确认提交的申请被自动解析，并将申请数据从你的 PMS 回传同步进入 UnitPulse（PMS → UnitPulse）。",
       why:"人工录入申请既慢又易出错。",
       benefit:"申请被自动捕获并结构化，让租客流程推进更快。",
       how:["UnitPulse 用一份样例申请验证自动解析。","确认申请双向同步。"],
       verify:"面板中“申请自动解析 — 正常”与“申请同步 — 正常”均显示为 ✅。"}},
 
-   {id:"p5-2", owner:"up",
+   {id:"p5-2", owner:"up", dir:"in",
     en:{title:"Contract sent / executed sync",
       what:"Confirm contract “sent” and “executed” statuses sync from your PMS into UnitPulse.",
       why:"Closes the loop from lead → application → signed lease in a single view.",
@@ -576,6 +582,7 @@ function renderPhases(){
     p.items.forEach(function(it){
       var d=it[LANG], isDone=!!DONE[it.id];
       var ownerCls=it.owner, ownerTxt=(it.owner==="up"?u.ownerUp:it.owner==="you"?u.ownerYou:u.ownerBoth);
+      var dirHtml=it.dir?'<span class="dir '+it.dir+'">'+(it.dir==="out"?u.dirOut:it.dir==="in"?u.dirIn:u.dirTwo)+'</span>':'';
       var howLis=d.how.map(function(s){return "<li>"+s+"</li>"}).join("");
       html+='<div class="item'+(isDone?' done':'')+'" id="'+it.id+'">';
       html+= '<div class="item-row" onclick="toggleOpen(\''+it.id+'\')">';
@@ -583,7 +590,7 @@ function renderPhases(){
               'onclick="event.stopPropagation();toggleDone(\''+it.id+'\')" '+
               'onkeydown="if(event.key===\' \'||event.key===\'Enter\'){event.preventDefault();event.stopPropagation();toggleDone(\''+it.id+'\')}">'+IC.check+'</span>';
       html+=  '<div class="item-main"><div class="item-title">'+d.title+'</div>'+
-              '<div class="item-meta"><span class="owner '+ownerCls+'">'+ownerTxt+'</span></div></div>';
+              '<div class="item-meta"><span class="owner '+ownerCls+'">'+ownerTxt+'</span>'+dirHtml+'</div></div>';
       html+=  '<span class="chev">'+IC.chev+'</span>';
       html+= '</div>';
       html+= '<div class="detail"><div class="detail-in">'+
